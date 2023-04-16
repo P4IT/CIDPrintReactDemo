@@ -1,0 +1,7 @@
+{
+  "name": "CIDPrintReact",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "react"
+}
