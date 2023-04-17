@@ -1,5 +1,27 @@
 import { TicketData } from "@captureid/capacitor3-cidprint";
 
+export var TransferTicket: TicketData = {
+    ...new TicketData(),
+    variables: {
+        destnumber: "5003",
+        destname_part1: "Berlin",
+        destname_part2: "Alexanderplatz",
+        destname_part3: " Strasse 22",
+        ssccdatamatrix: "\\F00030471199999801338",
+        ssccnumber: "(00)123456789012345678",
+        barcode: "1234",
+        to: "T:",
+        sapnumber_destination: "(1000)",
+        sendstorenumber: "4567",
+        sapnumber_sendstore: "(1005)",
+        from: "F:",
+        sendstorename_part1: "Innsbruck EKZ",
+        sendstorename_part2: "West",
+        ssccnumber_part1: "(00)0304711",
+        ssccnumber_part2: "3998325410"
+    }
+};
+
 export var MarkdownTicket: TicketData = {
     ...new TicketData(),
     variables: {

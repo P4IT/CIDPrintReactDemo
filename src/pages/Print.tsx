@@ -1,10 +1,10 @@
 import { IonButton, IonContent, IonFab, IonFabButton, IonFabList, IonHeader, IonIcon, IonItem, IonLabel, IonList, IonModal, IonPage, IonSelect, IonSelectOption, IonTextarea, IonTitle, IonToggle, IonToolbar, useIonViewDidEnter } from '@ionic/react';
 import './Print.css';
 import { useDataProvider } from '../data/IData';
-import { CIDPrint, CIDPrinterListenerTypes, Device, EventType, PrinterLibraryActionType, PrinterLibraryEvent } from '@captureid/capacitor3-cidprint';
+import { CIDPrint, CIDPrinterInformation, CIDPrinterListenerTypes, Device, EventType, PrinterLibraryActionType, PrinterLibraryEvent } from '@captureid/capacitor3-cidprint';
 import { useEffect, useState } from 'react';
 import { chevronDownCircleOutline, lockOpenOutline, lockClosedOutline } from 'ionicons/icons';
-import { MarkdownLabel } from '../data/LabelData';
+import { MarkdownLabel, TransferTicket } from '../data/LabelData';
 import { Keyboard } from '@capacitor/keyboard';
 
 const Print: React.FC = () => {
@@ -128,6 +128,28 @@ const Print: React.FC = () => {
     await CIDPrint.printLabelWithObject({label: labelfile, data: MarkdownLabel()});    
   }
 
+  const transport = () => {
+    CIDPrint.setupMediaSize({width: 27, height: 96});
+    let labelfile = 'non_legacy_transport_label.dat';
+    CIDPrint.printLabelWithObject({label: labelfile, data: TransferTicket});
+  }
+
+  const legacytransport = () => {
+    CIDPrint.setupMediaSize({width: 27, height: 96});
+    let labelfile = 'legacy_transport_label.dat';
+    CIDPrint.printLabelWithObject({label: labelfile, data: TransferTicket});
+  }
+
+  const getstatus = () => {
+    CIDPrint.getPrinterStatus();
+  }
+
+  const getinfo = () => {
+    CIDPrint.getPrinterInformation().then((info:CIDPrinterInformation) => {
+      alert(JSON.stringify(info));
+    });
+  }
+
   const formfeed = () => {
     CIDPrint.sendFormFeed();
   }
@@ -175,6 +197,7 @@ const Print: React.FC = () => {
             <IonSelect interface="popover" onIonChange={(e) => setMediaSize(e.detail.value)}>
               <IonSelectOption value="46x37">46 x 37</IonSelectOption>
               <IonSelectOption value="46x88">46 x 88</IonSelectOption>
+              <IonSelectOption value="27x96">27 x 96</IonSelectOption>
             </IonSelect>
           </IonItem>
           <IonItem>
@@ -185,6 +208,14 @@ const Print: React.FC = () => {
             <IonButton shape='round' fill='outline'onClick={() => formfeed()}>Form Feed</IonButton>
             <IonButton shape='round' fill='outline'onClick={() => calibrate()}>Calibrate</IonButton>
             <IonButton shape='round' fill='outline'onClick={() => setClipping(!clipping)}>{clipping?'disable ':'enable '} Clipping</IonButton>
+          </IonItem>
+          <IonItem>
+            <IonButton shape='round' fill='outline'onClick={() => transport()}>Transport Ticket</IonButton>
+            <IonButton shape='round' fill='outline'onClick={() => legacytransport()}>Legacy Transport Label</IonButton>
+          </IonItem>
+          <IonItem>
+            <IonButton shape='round' fill='outline'onClick={() => getstatus()}>get Status</IonButton>
+            <IonButton shape='round' fill='outline'onClick={() => getinfo()}>get Information</IonButton>
           </IonItem>
         </IonList>
         <IonModal isOpen={showEdit}>
