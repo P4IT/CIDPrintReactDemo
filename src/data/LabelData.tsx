@@ -100,5 +100,27 @@ export const MarkdownLabel = (): TicketData => {
     mdticket.variables.hand = "hand.bmp";
     mdticket.variables.qrcode = 'https://qr.c-a.com/?01=04062849672653';
     mdticket.variables.candalink = "www.c-a.com";
+
+    mdticket.variables.currency_unit = "EUR/Unit";
+    mdticket.variables.currency_pack = "EUR/Pack";
+    mdticket.variables.current_price = "Current Price";
+    mdticket.variables.unit_sellingprice = "30.00";
+    mdticket.variables.additional_description_1 = "Lowest Price of";
+    mdticket.variables.additional_description_2 = "the last 30 days";
+    mdticket.variables.unit_last_sellingprice = "90.00";
+    mdticket.variables.unit_last_crosschar = "X";
+    mdticket.variables.original_price = "Original Price";
+    mdticket.variables.unit_original_sellingprice = "120.00";
+    mdticket.variables.unit_original_crosschar = "X";
+    mdticket.variables.pack_sellingprice = "101.01";
+    mdticket.variables.pack_last_sellingprice = "300.00";
+    mdticket.variables.pack_last_crosschar = "X";
+    mdticket.variables.pack_original_sellingprice = "654.67";
+    mdticket.variables.pack_original_crosschar = "X";
+    mdticket.variables.unit_last_swidth = "5";
+    mdticket.variables.unit_original_swidth = "6";
+    mdticket.variables.pack_last_swidth = "6";
+    mdticket.variables.pack_original_swidth = "6";
+
     return mdticket;
 }

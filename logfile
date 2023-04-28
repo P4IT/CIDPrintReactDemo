@@ -25,3 +25,10 @@
 2023-04-12 09:32:03.269 CEST [46878] LOG:  using stale statistics instead of current ones because stats collector is not responding
 2023-04-12 09:47:59.799 CEST [16593] FATAL:  lock file "postmaster.pid" already exists
 2023-04-12 09:47:59.799 CEST [16593] HINT:  Is another postmaster (PID 46873) running in data directory "/Library/PostgreSQL/15/data"?
+2023-04-18 21:41:25.637 CEST [46878] LOG:  using stale statistics instead of current ones because stats collector is not responding
+2023-04-18 21:52:25.084 CEST [46878] LOG:  using stale statistics instead of current ones because stats collector is not responding
+2023-04-19 09:06:42.669 CEST [46878] LOG:  using stale statistics instead of current ones because stats collector is not responding
+2023-04-20 07:53:39.879 CEST [46873] LOG:  received smart shutdown request
+2023-04-20 07:53:39.898 CEST [46873] LOG:  background worker "logical replication launcher" (PID 46880) exited with exit code 1
+2023-04-20 07:53:39.904 CEST [46875] LOG:  shutting down
+2023-04-20 07:53:39.939 CEST [46873] LOG:  database system is shut down

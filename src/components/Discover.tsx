@@ -7,7 +7,7 @@ interface ContainerProps {
 
 const Discover: React.FC<ContainerProps> = ({ name }) => {
   const discoverPrinter = () => {
-    CIDPrint.discoverDevices();
+    CIDPrint.discoverDevices({timeout: 0});
   }
 
   return (

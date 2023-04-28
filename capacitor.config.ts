@@ -6,6 +6,7 @@ const config: CapacitorConfig = {
   appName: 'CIDPrintReact',
   webDir: 'build',
   bundledWebRuntime: false,
+  loggingBehavior: 'debug',
   plugins: {
     Keyboard: {
       resize: KeyboardResize.None,

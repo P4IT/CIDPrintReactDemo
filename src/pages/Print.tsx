@@ -1,7 +1,7 @@
 import { IonButton, IonContent, IonFab, IonFabButton, IonFabList, IonHeader, IonIcon, IonItem, IonLabel, IonList, IonModal, IonPage, IonSelect, IonSelectOption, IonTextarea, IonTitle, IonToggle, IonToolbar, useIonViewDidEnter } from '@ionic/react';
 import './Print.css';
 import { useDataProvider } from '../data/IData';
-import { CIDPrint, CIDPrinterInformation, CIDPrinterListenerTypes, Device, EventType, PrinterLibraryActionType, PrinterLibraryEvent } from '@captureid/capacitor3-cidprint';
+import { BluetoothResult, CIDPrint, CIDPrinterInformation, CIDPrinterListenerTypes, Device, EventType, PrinterLibraryActionType, PrinterLibraryEvent, SatoPrinterModel } from '@captureid/capacitor3-cidprint';
 import { useEffect, useState } from 'react';
 import { chevronDownCircleOutline, lockOpenOutline, lockClosedOutline } from 'ionicons/icons';
 import { MarkdownLabel, TransferTicket } from '../data/LabelData';
@@ -13,9 +13,11 @@ const Print: React.FC = () => {
   const [connected, setConnected] = useState(false);
   const [useSticker, setUseSticker] = useState(false);
   const [useHand, setUseHand] = useState(false);
+  const [useDescriptionSticker, setUseDescriptionSticker] = useState(false);
   const [showEdit, setShowEdit] = useState(false);
   const [ticket, setTicket] = useState<string>();
   const [clipping, setClipping] = useState(false);
+  const [info, setInfo] = useState<CIDPrinterInformation>();
 
   useEffect(() => {
     if(printer !== undefined) {
@@ -73,6 +75,8 @@ const Print: React.FC = () => {
       case PrinterLibraryActionType.CONNECT:
         if(event.type === EventType.SUCCESS) {
           setConnected(true);
+          let dev: BluetoothResult = event.data as BluetoothResult;
+          alert(dev.connecteddevice?.vendor.toString() + '\n' + SatoPrinterModel.values()[dev.connecteddevice?.model as number]);
         }
         break;
       case PrinterLibraryActionType.DISCONNECT:
@@ -128,6 +132,13 @@ const Print: React.FC = () => {
     await CIDPrint.printLabelWithObject({label: labelfile, data: MarkdownLabel()});    
   }
 
+  const printnew = async() => {
+    let labelfile: string = useDescriptionSticker?'description_sticker':'description_ticket';
+    setInfo(await CIDPrint.getPrinterInformation());
+    labelfile = info?.modelname.includes("200")?labelfile + '_200.dat': labelfile + '.dat';
+    await CIDPrint.printLabelWithObject({label: labelfile, data: MarkdownLabel()});    
+  }
+
   const transport = () => {
     CIDPrint.setupMediaSize({width: 27, height: 96});
     let labelfile = 'non_legacy_transport_label.dat';
@@ -145,8 +156,9 @@ const Print: React.FC = () => {
   }
 
   const getinfo = () => {
-    CIDPrint.getPrinterInformation().then((info:CIDPrinterInformation) => {
+    CIDPrint.getPrinterInformation().then((info: CIDPrinterInformation) => {
       alert(JSON.stringify(info));
+      setInfo(info);
     });
   }
 
@@ -187,9 +199,19 @@ const Print: React.FC = () => {
             <IonToggle checked={useHand} onIonChange={(e) => setUseHand(e.detail.checked)} />
           </IonItem>
           <IonItem>
+            <IonLabel>{useDescriptionSticker?'use Description Sticker':'use Description Ticket'}</IonLabel>
+            <IonToggle checked={useDescriptionSticker} onIonChange={(e) => setUseDescriptionSticker(e.detail.checked)} />
+          </IonItem>
+          <IonItem>
             <IonLabel></IonLabel>
             <IonButton shape='round' fill='outline'onClick={() => print()}>
               {useSticker?'print Price Sticker':'print Price Ticket'}
+            </IonButton>
+          </IonItem>
+          <IonItem>
+            <IonLabel></IonLabel>
+            <IonButton shape='round' fill='outline'onClick={() => printnew()}>
+              {useDescriptionSticker?'print Description Sticker':'print Description Ticket'}
             </IonButton>
           </IonItem>
           <IonItem>

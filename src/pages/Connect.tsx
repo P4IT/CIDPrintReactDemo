@@ -41,7 +41,7 @@ const Connect: React.FC = () => {
   }
 
   const discover = () => {
-    CIDPrint.discoverDevices();
+    CIDPrint.discoverDevices({timeout: 0});
   }
 
   const connect = (item: any) => {
