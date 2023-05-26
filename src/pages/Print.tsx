@@ -1,13 +1,13 @@
 import { IonButton, IonContent, IonFab, IonFabButton, IonFabList, IonHeader, IonIcon, IonItem, IonLabel, IonList, IonModal, IonPage, IonSelect, IonSelectOption, IonTextarea, IonTitle, IonToggle, IonToolbar, useIonViewDidEnter } from '@ionic/react';
 import './Print.css';
 import { useDataProvider } from '../data/IData';
-import { BluetoothResult, CIDPrint, CIDPrinterInformation, CIDPrinterListenerTypes, Device, EventType, PrinterLibraryActionType, PrinterLibraryEvent, SatoPrinterModel } from '@captureid/capacitor3-cidprint';
+import { BluetoothResult, CIDPrint, CIDPrinterInformation, CIDPrinterListenerTypes, Device, EventType, PrinterLibraryActionType, PrinterLibraryEvent, SatoPrinterModel, TicketData } from '@captureid/capacitor3-cidprint';
 import { useEffect, useState } from 'react';
 import { chevronDownCircleOutline, lockOpenOutline, lockClosedOutline } from 'ionicons/icons';
 import { MarkdownLabel, TransferTicket } from '../data/LabelData';
 import { Keyboard } from '@capacitor/keyboard';
 
-const Print: React.FC = () => {
+const Print: React.FC =  () => {
   const { printers, addMessage } = useDataProvider();
   const [printer, setPrinter] = useState();
   const [connected, setConnected] = useState(false);
@@ -76,7 +76,7 @@ const Print: React.FC = () => {
         if(event.type === EventType.SUCCESS) {
           setConnected(true);
           let dev: BluetoothResult = event.data as BluetoothResult;
-          alert(dev.connecteddevice?.vendor.toString() + '\n' + SatoPrinterModel.values()[dev.connecteddevice?.model as number]);
+          alert(dev.connecteddevice?.vendor!.toString() + '\n' + SatoPrinterModel.values()[dev.connecteddevice?.model as number]);
         }
         break;
       case PrinterLibraryActionType.DISCONNECT:
@@ -110,7 +110,7 @@ const Print: React.FC = () => {
     if(connected) {
       CIDPrint.disconnectFromPrinter({ mac: address });
     } else {
-      CIDPrint.connectToPrinter({ address: address, autoreconnect: false });
+      CIDPrint.connectToPrinter({ address: address, autoreconnect: true });
     }
   }
 
@@ -127,9 +127,11 @@ const Print: React.FC = () => {
   }
 
   const print = async() => {
-    let labelfile: string = useSticker?'price_sticker':'price_ticket';
-    labelfile = useHand?labelfile + '_hand.dat': labelfile + '.dat';
-    await CIDPrint.printLabelWithObject({label: labelfile, data: MarkdownLabel()});    
+    let labelfile: string = useSticker?'price_sticker_hand.dat':'price_ticket_hand.dat';
+    let data: TicketData = MarkdownLabel();
+    data.variables.hand = useHand?"hand.bmp":"";
+//    labelfile = useHand?labelfile + '_hand.dat': labelfile + '.dat';
+    await CIDPrint.printLabelWithObject({label: labelfile, data: data});    
   }
 
   const printnew = async() => {
@@ -195,7 +197,7 @@ const Print: React.FC = () => {
             <IonToggle checked={useSticker} onIonChange={(e) => setUseSticker(e.detail.checked)} />
           </IonItem>
           <IonItem>
-            <IonLabel>{useHand?'use Price Sticker':'use Hand Icon'}</IonLabel>
+            <IonLabel>{useHand?'no Hand Icon':'use Hand Icon'}</IonLabel>
             <IonToggle checked={useHand} onIonChange={(e) => setUseHand(e.detail.checked)} />
           </IonItem>
           <IonItem>
@@ -238,6 +240,9 @@ const Print: React.FC = () => {
           <IonItem>
             <IonButton shape='round' fill='outline'onClick={() => getstatus()}>get Status</IonButton>
             <IonButton shape='round' fill='outline'onClick={() => getinfo()}>get Information</IonButton>
+          </IonItem>
+          <IonItem>
+            <IonButton shape='round' fill='outline'onClick={async () => await CIDPrint.enableBluetoothAdapter({enable: true})}>enable/disable Bluetooth</IonButton>
           </IonItem>
         </IonList>
         <IonModal isOpen={showEdit}>

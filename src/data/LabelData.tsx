@@ -89,7 +89,7 @@ export const MarkdownLabel = (): TicketData => {
     mdticket.variables.item_number = "1234.565";
     mdticket.variables.colour_position = "1";
     mdticket.variables.order = "1 111/11 22 1223 12321 2";
-    mdticket.variables.barcode = "12345678901234";
+    mdticket.variables.barcode = "A3303498100564";
     mdticket.variables.gtin = "123456789012345678901";
     mdticket.variables.information = "2 1234.565 111 1111 3";
     mdticket.variables.computer_size = "000";
