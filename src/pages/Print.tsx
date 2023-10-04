@@ -85,6 +85,9 @@ const Print: React.FC =  () => {
         }
         break;
       case PrinterLibraryActionType.PRINT:
+        if(event.type !== EventType.SUCCESS) {
+          alert(event.message);
+        }
         break;
       case PrinterLibraryActionType.STATUS:
         break;
@@ -139,6 +142,10 @@ const Print: React.FC =  () => {
     setInfo(await CIDPrint.getPrinterInformation());
     labelfile = info?.modelname.includes("200")?labelfile + '_200.dat': labelfile + '.dat';
     await CIDPrint.printLabelWithObject({label: labelfile, data: MarkdownLabel()});    
+  }
+
+  const printzero = async() => {
+    await CIDPrint.printLabel({label: 'general_zero.dat'});
   }
 
   const transport = () => {
@@ -215,6 +222,10 @@ const Print: React.FC =  () => {
             <IonButton shape='round' fill='outline'onClick={() => printnew()}>
               {useDescriptionSticker?'print Description Sticker':'print Description Ticket'}
             </IonButton>
+          </IonItem>
+          <IonItem>
+            <IonLabel></IonLabel>
+            <IonButton shape='round' fill='outline'onClick={() => printzero()}>Markdown to Zero</IonButton>
           </IonItem>
           <IonItem>
             <IonLabel>Media Size</IonLabel>
